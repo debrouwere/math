@@ -1,0 +1,6 @@
+Math is a better math library for JavaScript. Everything that's available under your 
+good ol' Math object is available under the `math` prefix as well, but so much more 
+too.
+
+Also take a look at summa, a small library for descriptive statistics in JavaScript
+and CoffeeScript.

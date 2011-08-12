@@ -1,0 +1,18 @@
+{
+    "name": "math",
+    "author": "Stijn Debrouwere",
+    "description": "A better math library for JavaScript.",
+    "version": "0.2.0",
+    "main": "./lib/index.js",
+    "dependencies": {
+        "coffee-script": "latest", 
+        "expresso": "latest",
+        "should": "latest",
+        "uglify-js": "latest"
+    },
+    "repository": {
+        "type": "git", 
+        "url": "git://github.com/stdbrouw/math.git"
+    },
+    "licenses": [{"type": "MIT", "url": "http://github.com/stdbrouw/math/raw/master/LICENSE"}]
+}
