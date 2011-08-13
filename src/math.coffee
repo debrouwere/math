@@ -117,6 +117,51 @@ module.exports = math =
     ceil: recursive Math.ceil
     ceiling: alias 'ceil'
 
+    # The exponential function takes a number (x) and
+    # returns e to the power of x.
+    # 
+    # Another way to say `math.power(math.constants.E, x)`
+    # pretty much.
+    exp: recursive (x, base = math.constants.E) ->
+        math.power base, x
+    
+    exponential: alias 'exp'
+
+    # Different people mean different things by 'logarithm', but
+    # mathematicians most often mean the natural logarithm, which
+    # uses Euler's constant (available under `math.constants.E`)
+    # as the base. Programming languages commonly make this 
+    # function available as `log`, and so do we, but our `log`
+    # function also takes an optional `base` argument, where
+    # you can specify any base you want.
+    log: recursive (x, base = math.constants.E) ->
+        if base is math.constants.E
+            Math.log x
+        else
+            Math.log(x)/Math.log(base)
+
+    logarithm: alias 'log'
+
+    # If you need the natural logarithm (base e), the common
+    # logarithm (base 10) or the binary logarithm (base 2), 
+    # it is advisable to use the `ln`, `lg` and `lb` shortcuts
+    # respectively. They're less confusing, and recommended
+    # by the ISO 80000-2 standard for mathematical signs
+    # and symbols.
+    ln: recursive (x) -> math.log x, math.constants.E
+    loge: alias 'ln'
+    natural_logarithm: alias 'ln'
+
+    # The natural logarithm.
+    lg: recursive (x) -> math.log x, 10
+    log10: alias 'lg'
+    common_logarithm: alias 'lg'
+
+    # The binary logarithm.
+    lb: recursive (x) -> math.log x, 2
+    log2: alias 'lb'
+    binary_logarithm: alias 'lb'
+
     arc:
         cos: recursive Math.acos
         cosine: alias 'cos', 'arc'
@@ -133,11 +178,19 @@ module.exports = math =
     cos: recursive Math.cos
     cosine: alias 'cos'
 
-    sin: Math.sin
+    sin: recursive Math.sin
     sine: alias 'sin'
 
-    tan: Math.tan
+    tan: recursive Math.tan
     tangent: alias 'tan'
+
+    convert:
+        # One radian is equal to 180/pi degrees.
+        degrees: recursive (radians) ->
+            radians * (180 / math.constants.PI)
+            
+        radians: recursive (degrees) ->
+            degrees / (180 / math.constants.PI)
 
     # Make the sum of a list.
     sum: ->

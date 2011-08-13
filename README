@@ -2,6 +2,10 @@ Math is a better math library for JavaScript. Everything that's available under 
 good ol' Math object is available under the `math` prefix as well, but so much more 
 too.
 
+Some care has been taken to make sure that operations are never in-place: we don't
+change existing data structures but always return calculations as a new number, in 
+a new array or other structure.
+
 You can use math in the browser and in node.js. The library is subdivided into the 
 submodules `math` and `random`. If you just need one or the other, or just want
 easier shortcuts, do
@@ -11,7 +15,7 @@ easier shortcuts, do
     // this adds `math` and `random` to the window object, so 
     // you can use e.g. `random.integer()` instead of
     // `math.random.integer()`
-    math.global()
+    math.unpack()
     // in node.js
     math = require('math').math;
 
@@ -24,8 +28,12 @@ Or, in CoffeeScript:
 
 Also take a look at these libraries: 
 
-  * [summa](https://github.com/stdbrouw/summa), a small library for descriptive
-    statistics in JavaScript and CoffeeScript.
   * [mathnetics](https://github.com/shanest/mathnetics), a mathematics library
     that makes it easy to handle sets, groups, vectors, matrices, planes and 
     more.
+  * [m8](https://github.com/Kambfhase/m8), another interesting math library.
+  * [MathPlus](https://github.com/pr1001/MathPlus), which provides useful
+    approximation functions for limits and derivatives.
+  * [summa](https://github.com/stdbrouw/summa), a small library for descriptive
+    statistics in JavaScript and CoffeeScript, which is built in this mathematics
+    library.
