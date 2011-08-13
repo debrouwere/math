@@ -88,19 +88,20 @@ module.exports = math =
     # becomes 12.
     sign: recursive (a, b) ->
         a = math.absolute a
-        if math.is_negative b
+        if math.is.negative b
             math.negative a
         else
             a
 
-    # Testing whether something is a positive number is as easy as `number >= 0`
-    # but to aid in functional programming, a shortcut doesn't hurt.
-    is_pos: recursive (a) -> a >= 0
-    is_positive: alias 'is_pos'
+    is: 
+        # Testing whether something is a positive number is as easy as `number >= 0`
+        # but to aid in functional programming, a shortcut doesn't hurt.
+        pos: recursive (a) -> a >= 0
+        positive: alias 'pos', 'is'
 
-    # Ditto for `is_positive`.
-    is_neg: recursive (a) -> a < 0
-    is_negative: alias 'is_neg'
+        # Ditto for `is_positive`.
+        neg: recursive (a) -> a < 0
+        negative: alias 'neg', 'is'
 
     # Find the lowest value in a sequence.
     min: Math.min

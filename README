@@ -11,13 +11,13 @@ submodules `math` and `random`. If you just need one or the other, or just want
 easier shortcuts, do
 
     // create a basic shortcut
-    math = math.math
-    // this adds `math` and `random` to the window object, so 
-    // you can use e.g. `random.integer()` instead of
+    math = math.math;
+    // this adds `math`, `random` and `coordinates` to the window object, 
+    // allowing you to use e.g. `random.integer()` instead of
     // `math.random.integer()`
-    math.unpack()
+    math.unpack();
     // in node.js
-    math = require('math').math;
+    var math = require('math').math;
 
 Or, in CoffeeScript:
 
