@@ -49,8 +49,9 @@ task 'build:browser', 'merge and uglify the code for usage in a browser environm
         }();
         """
     
-    {parser, uglify} = require 'uglify-js'
-    code = uglify.gen_code uglify.ast_squeeze uglify.ast_mangle parser.parse code
+    unless process.env.MINIFY is 'false'
+        {parser, uglify} = require 'uglify-js'
+        code = uglify.gen_code uglify.ast_squeeze uglify.ast_mangle parser.parse code
 
     fs.writeFileSync 'math.min.js', header + code
 
