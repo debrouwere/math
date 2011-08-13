@@ -1,5 +1,3 @@
-_ ?= require 'underscore'
-
 # The `recursive` helper allows us to accept both arrays and 
 # single values for every single function in this library.
 #
@@ -30,6 +28,34 @@ module.exports = math =
         SQRT2:   Math.SQRT2
 
     random: Math.random
+
+    # Generate an integer Array containing an arithmetic progression.
+    #
+    # This is a port of the range function in underscore.js, courtesy of
+    # Jeremy Ashkenas, which is itself a port of the native Python `range()` 
+    # function. See 
+    # [the Python documentation](http://docs.python.org/library/functions.html#range).
+    range: (start, stop, step) ->
+        if arguments.length <= 1
+            stop = start or 0
+            start = 0
+
+        step ?= 1
+
+        len = Math.max(Math.ceil((stop - start) / step), 0)
+        idx = 0
+        range = new Array(len)
+
+        while idx < len
+            range[idx++] = start
+            start += step
+
+        range
+
+    # In mathematical parlance, a range is more commonly known as either 
+    # an arithmetic progression or an arithmetic sequence.
+    progression: alias 'range'
+    sequence: alias 'range'
 
     # `noop` returns exactly the value that it has been given.
     # It stands for 'no operation'. A no-op is sometimes useful
@@ -72,15 +98,15 @@ module.exports = math =
     is_pos: recursive (a) -> a >= 0
     is_positive: alias 'is_pos'
 
-    # Ditto `is_positive`.
+    # Ditto for `is_positive`.
     is_neg: recursive (a) -> a < 0
     is_negative: alias 'is_neg'
 
-    # Find the minimal value of a sequence.
+    # Find the lowest value in a sequence.
     min: Math.min
     minimum: alias 'min'
 
-    # Find the maximal value of a sequence.
+    # Find the highest value in a sequence.
     max: Math.max
     maximum: alias 'max'
 
@@ -115,7 +141,7 @@ module.exports = math =
 
     # Make the sum of a list.
     sum: ->
-        _.reduce arguments, ((a, b) -> a+b), 0
+        Array.prototype.slice.call(arguments).reduce ((a, b) -> a+b), 0
 
     # Add a certain number to another number or to each number in a list.
     add: recursive (a, b) ->
