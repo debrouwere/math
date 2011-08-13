@@ -24,7 +24,7 @@ task 'build', 'build the JavaScript source files', ->
 # heavily inspired by Jeremy Ashkenas' CoffeeScript build script
 task 'build:browser', 'merge and uglify the code for usage in a browser environment', ->
     # order is important: we can't require anything that isn't loaded yet
-    modules = ['math', 'random']
+    modules = ['math', 'random', 'index']
     
     code = ''
     
@@ -35,11 +35,13 @@ task 'build:browser', 'merge and uglify the code for usage in a browser environm
                 var module = {};
                 var exports = this;
                 #{module}
-                _.extend(exports, module.exports)
+                for (var prop in module.exports) {
+                    if (module.exports[prop] !== void 0) exports[prop] = module.exports[prop];
+                }
             };
             """
     code = """
-        this.summa = function() {
+        this.math = function() {
             var modules = {};
             function require(path){ return require[path]; }
             #{code}
@@ -50,8 +52,8 @@ task 'build:browser', 'merge and uglify the code for usage in a browser environm
     {parser, uglify} = require 'uglify-js'
     code = uglify.gen_code uglify.ast_squeeze uglify.ast_mangle parser.parse code
 
-    fs.writeFileSync 'summa.min.js', header + code
+    fs.writeFileSync 'math.min.js', header + code
 
-task 'test', 'run the summa test suite', ->
+task 'test', 'run the math test suite', ->
     exec 'expresso lib/test/*', (error, stdout, stderr) ->
         process.stderr.write stderr

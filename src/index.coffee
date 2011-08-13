@@ -1,7 +1,12 @@
 exports ?= window
 
+exports.VERSION = '0.2.0'
 exports.math = require './math'
 exports.random = require './random'
+
+exports.global = ->
+    for name, value of exports
+        window[name] = value
 
 ###
 Stuff not present now that's being considered for inclusion: 

@@ -2,5 +2,30 @@ Math is a better math library for JavaScript. Everything that's available under 
 good ol' Math object is available under the `math` prefix as well, but so much more 
 too.
 
-Also take a look at summa, a small library for descriptive statistics in JavaScript
-and CoffeeScript.
+You can use math in the browser and in node.js. The library is subdivided into the 
+submodules `math` and `random`. If you just need one or the other, or just want
+easier shortcuts, do
+
+    // create a basic shortcut
+    math = math.math
+    // this adds `math` and `random` to the window object, so 
+    // you can use e.g. `random.integer()` instead of
+    // `math.random.integer()`
+    math.global()
+    // in node.js
+    math = require('math').math;
+
+Or, in CoffeeScript:
+
+    # in the browser
+    {math, random} = math
+    # in node.js
+    {math, random} = require 'math'
+
+Also take a look at these libraries: 
+
+  * [summa](https://github.com/stdbrouw/summa), a small library for descriptive
+    statistics in JavaScript and CoffeeScript.
+  * [mathnetics](https://github.com/shanest/mathnetics), a mathematics library
+    that makes it easy to handle sets, groups, vectors, matrices, planes and 
+    more.
