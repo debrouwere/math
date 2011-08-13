@@ -18,9 +18,9 @@ module.exports = random =
         r = _.range arguments...
         random.choice r
 
-    # we can limit the shuffled (or permutated) sequence to k items 
-    # if we don't need the full sequence shuffled; this is a particularly 
-    # useful optimization when grabbing a sample of a distribution
+    # We can limit the shuffled (or permutated) sequence to k items
+    # if we don't need the full sequence shuffled. This is a particularly 
+    # useful optimization when grabbing a sample of a distribution.
     shuffle: (sequence, k) ->
         copied = _.clone sequence
         shuffled = []

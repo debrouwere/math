@@ -1,14 +1,14 @@
 _ ?= require 'underscore'
 
-# This `recurse` helper allows us to accept both arrays and 
+# The `recursive` helper allows us to accept both arrays and 
 # single values for every single function in this library.
 #
 # If we get an array, we simply apply the operation to each
 # value in that array, saving people a mapping transformation.
-recurse = (fn) ->
-    (a, args...) ->
+recursive = (fn) ->
+    recursive_fn = (a, args...) ->
         if a.length?
-            fn x, args... for x in a
+            recursive_fn x, args... for x in a
         else
             fn a, args...
 
@@ -34,33 +34,33 @@ module.exports = math =
     # `noop` returns exactly the value that it has been given.
     # It stands for 'no operation'. A no-op is sometimes useful
     # when using a functional programming style.
-    noop: recurse (a) -> a
+    noop: recursive (a) -> a
 
     # Round a number up to n decimal places.
     # 
     # Note that you can also pass a negative amount of digits, in which case we'll 
     # round to the nearest tenth, hundredth et cetera for -1, -2 and so on.
-    round: recurse (number, digits = 0) ->
+    round: recursive (number, digits = 0) ->
         multiple = Math.pow 10, digits
         Math.round(number * multiple) / multiple
 
     # The absolute of a number is a number without any sign.
     # In practice, that makes it a positive number.
-    abs: recurse (a) -> Math.abs a
+    abs: recursive (a) -> Math.abs a
     absolute: alias 'abs'
 
     # Convert any number, positive or negative, into a negative number.
-    neg: recurse (a) -> -Math.abs a
+    neg: recursive (a) -> -Math.abs a
     negative: alias 'neg'
 
     # Convert any number into its opposite. Positive numbers will become 
     # negative, and negative numbers will become positive.
-    invert: recurse (a) -> -a
+    invert: recursive (a) -> -a
 
     # Give a number the sign of a second number. For example, if we give 3
     # the sign of -5, it becomes -3. If we give -12 the sign of 2, it
     # becomes 12.
-    sign: recurse (a, b) ->
+    sign: recursive (a, b) ->
         a = math.absolute a
         if math.is_negative b
             math.negative a
@@ -69,11 +69,11 @@ module.exports = math =
 
     # Testing whether something is a positive number is as easy as `number >= 0`
     # but to aid in functional programming, a shortcut doesn't hurt.
-    is_pos: recurse (a) -> a >= 0
+    is_pos: recursive (a) -> a >= 0
     is_positive: alias 'is_pos'
 
     # Ditto `is_positive`.
-    is_neg: recurse (a) -> a < 0
+    is_neg: recursive (a) -> a < 0
     is_negative: alias 'is_neg'
 
     # Find the minimal value of a sequence.
@@ -85,26 +85,26 @@ module.exports = math =
     maximum: alias 'max'
 
     # Round down a real value to an integer.
-    floor: recurse Math.floor
+    floor: recursive Math.floor
 
     # Round up a real value to an integer.
-    ceil: recurse Math.ceil
+    ceil: recursive Math.ceil
     ceiling: alias 'ceil'
 
     arc:
-        cos: recurse Math.acos
+        cos: recursive Math.acos
         cosine: alias 'cos', 'arc'
 
-        sin: recurse Math.asin
+        sin: recursive Math.asin
         sine: alias 'sin', 'arc'
 
-        tan: recurse Math.atan
+        tan: recursive Math.atan
         tangent: alias 'tan', 'arc'
 
-        tan2: recurse Math.atan2
+        tan2: recursive Math.atan2
         tangent_of_quotient: alias 'tan2', 'arc'
 
-    cos: recurse Math.cos
+    cos: recursive Math.cos
     cosine: alias 'cos'
 
     sin: Math.sin
@@ -118,29 +118,40 @@ module.exports = math =
         _.reduce arguments, ((a, b) -> a+b), 0
 
     # Add a certain number to another number or to each number in a list.
-    add: recurse (a, b) ->
+    add: recursive (a, b) ->
         a + b
 
     # Subtract a certain number from another number or from each number in a list.        
-    subtract: recurse (a, b) ->
+    subtract: recursive (a, b) ->
         a - b
 
     # Divide a certain number by another number or divide each number in a list
     # by that number.
-    quotient: recurse (a, b) ->
+    quotient: recursive (a, b) ->
         a / b
 
     # Multiply a certain number by another number or multiply each number in a list
     # by that number.
-    product: recurse (a, b) ->
+    product: recursive (a, b) ->
         a * b
 
-    # takes both positive and negative powers (nth roots)
-    # inspired on a function written by Chris West
-    # TODO: not sure if this is quite correct for everything you throw at it
-    # TODO: make this work for fractions too, e.g 1/3 in addition to -3
-    # (or make it clear that negative powers will be interpreted as roots)
-    pow: recurse (x, n) ->
+    # Takes both positive and negative powers (nth roots)
+    # 
+    # Negative powers should be passed as `-<power>`, not as 
+    # `1/<power>`.
+    #
+    # You can pass fractions anyway, but then you'll get NaN when calculating 
+    # the root of a negative number for fractions with an odd denominator,
+    # e.g. `math.power(-8, 1/3)` will return `NaN` whereas `math.power(-8, -3)`
+    # will return `-2`.
+    #
+    # Of course, even-numbered roots of negative numbers will return `NaN` regardless
+    # of how you pass the parameters. To take the square root of -4 as an example, there
+    # simply does not exist a number n that would make `n * n = -4`, because an even amount
+    # of negative signs cancel each other out.
+    # 
+    # The implementation takes some hints from a function originally written by Chris West.
+    pow: recursive (x, n) ->
         # if we want an even (negative) root, 
         # we should negate our number and invert it at the end
         # to avoid NaN errors.        
@@ -158,18 +169,25 @@ module.exports = math =
 
     power: alias 'pow'
 
-    root: recurse (a, b) ->
+    root: recursive (a, b) ->
         math.power a, -b
 
-    sq: recurse (a) -> math.power a, 2
+    sq: recursive (a) -> math.power a, 2
     square: alias 'sq'
 
-    cube: recurse (a) -> math.power a, 3
+    cube: recursive (a) -> math.power a, 3
 
-    sqrt: recurse Math.sqrt
+    # JavaScript has a built-in static method on Math to calculate the square
+    # root, which is likely to be fastest, so that's the one we use.
+    # 
+    # This is equivalent to `math.power(a, -2)` and `math.root(a, 2)`.
+    sqrt: recursive Math.sqrt
     square_root: alias 'sqrt'
 
-    factorial: recurse (n) ->
+    euclidian_norm: recursive (a, b) ->
+        math.sqrt a*a + b*b
+
+    factorial: recursive (n) ->
         return 1 unless n > 1
     
         f = 1        
@@ -177,11 +195,3 @@ module.exports = math =
             f *= i
 
         f
-
-    ###
-    - exponent e**x
-    - log / ln
-      see https://github.com/pr1001/MathPlus
-    - not now, but would be appropriate: matrices, complex numbers, vectors, ...
-      https://github.com/Kambfhase/m8
-    ###
