@@ -10,6 +10,15 @@ recursive = (fn) ->
         else
             fn a, args...
 
+# Similar to the `recursive` helper, but simply converts arrays
+# into positional arguments if necessary.
+normalize = (fn) ->
+    ->
+        if arguments[0].length?
+            fn arguments[0]...
+        else
+            fn arguments...
+
 alias = (name, base) ->
     if base?
         -> math[base][name] arguments...
@@ -116,16 +125,21 @@ module.exports = math =
             return true
 
     # Find the lowest value in a sequence.
-    min: Math.min
+    # Accepts either positional arguments or an array of values.
+    #
+    #     math.minimum([1,2,3]) == math.minimum(1, 2, 3) == 1;
+    #
+    min: normalize Math.min
     minimum: alias 'min'
 
     # Find the highest value in a sequence.
-    max: Math.max
+    # Accepts either positional arguments or an array of values.
+    max: normalize Math.max
     maximum: alias 'max'
 
     # Find the index of the highest and lowest values in a sequence.
     index:
-        min: ->
+        min: normalize ->
             winner = 0
             for number, i in arguments
                 if number < arguments[winner]
@@ -134,7 +148,7 @@ module.exports = math =
 
         minimum: alias 'min', 'index'
 
-        max: ->
+        max: normalize ->
             winner = 0
             for number, i in arguments
                 if number > arguments[winner]
