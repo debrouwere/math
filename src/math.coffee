@@ -19,6 +19,15 @@ normalize = (fn) ->
         else
             fn arguments...
 
+# Also similar to the `recursive` helper, but for functions that
+# do calculations or operations on lists.
+deep = (fn) ->
+    (list, args...) ->
+        if list[0][0]?
+            fn sublist, args... for sublist in list
+        else
+            fn list, args...
+
 alias = (name, base) ->
     if base?
         -> math[base][name] arguments...
@@ -138,6 +147,9 @@ module.exports = math =
     maximum: alias 'max'
 
     # Find the index of the highest and lowest values in a sequence.
+    # 
+    # Implementation-wise, this is equivalent to numbers.indexOf math.max numbers, 
+    # but this is slightly faster: O(N) instead of 0(2N).
     index:
         min: normalize ->
             winner = 0
@@ -156,6 +168,24 @@ module.exports = math =
             winner
 
         maximum: alias 'max', 'index'
+
+    # Find the ordinal rank of a value in a sequence.
+    # Works with lists and lists of lists.
+    #
+    #     math.rank([6, 4, 5], 5) == 2;
+    #     math.rank([[1,2],[3,4,5,2]], 2) == [1, 0];
+    #
+    # The first rank is 1. If you want to start ranking from
+    # 0 or any other base point, pass an extra argument with
+    # that base point.
+    #
+    #    math.rank([6, 4, 5], 5, 0) == 1;
+    # 
+    # When asked for the rank of a number that is not in the sequence, 
+    # this function will return `-1`.
+    rank: deep (list, value, start = 1) ->
+        rank = list.slice().sort().indexOf(value)
+        rank + start unless value == -1
 
     # Round down a real value to an integer.
     floor: recursive Math.floor

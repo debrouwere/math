@@ -28,12 +28,15 @@ Or, in CoffeeScript:
 
 Also take a look at these libraries: 
 
+  * [underscore.js](https://github.com/documentcloud/underscore) contains 
+    functional programming aids that are essential if you're manipulating
+    big datasets.
   * [mathnetics](https://github.com/shanest/mathnetics), a mathematics library
     that makes it easy to handle sets, groups, vectors, matrices, planes and 
     more.
   * [m8](https://github.com/Kambfhase/m8), another interesting math library.
-  * [MathPlus](https://github.com/pr1001/MathPlus), which provides useful
+  * [MathPlus](https://github.com/pr1001/MathPlus) provides useful
     approximation functions for limits and derivatives.
   * [summa](https://github.com/stdbrouw/summa), a small library for descriptive
-    statistics in JavaScript and CoffeeScript, which is built in this mathematics
+    statistics in JavaScript and CoffeeScript, which is built on this mathematics
     library.

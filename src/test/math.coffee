@@ -11,6 +11,9 @@ module.exports =
             [9.234, 4, 9.234]
             [-0.33, 1, -0.3]
             [-0.37, 1, -0.4]
+            [937, -1, 940]
+            [937, -2, 900]
+            [937, -3, 1000]
             ]
 
         for [number, digits, result] in expectations
