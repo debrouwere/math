@@ -179,6 +179,12 @@ module.exports = math =
 
         maximum: alias 'max', 'index'
 
+    slice: deep (list, begin, end) ->
+        Array.prototype.slice.call list, begin, end
+
+    sort: deep (list) ->
+        list.slice().sort (a, b) -> a > b
+
     # Find the ordinal rank of a value in a sequence.
     # Works with lists and lists of lists.
     #
@@ -194,8 +200,8 @@ module.exports = math =
     # When asked for the rank of a number that is not in the sequence, 
     # this function will return `-1`.
     rank: deep (list, value, start = 1) ->
-        rank = list.slice().sort().indexOf(value)
-        rank + start unless value == -1
+        r = math.sort(list).indexOf(value)
+        r + start unless value == -1
 
     # Round down a real value to an integer.
     floor: recursive Math.floor
