@@ -1,8 +1,7 @@
 math = require './math'
 
 module.exports = random = 
-    random: ->
-        Math.random()
+    random: math.random
 
     float: (start, stop) ->
         start + Math.random() * (start - stop)

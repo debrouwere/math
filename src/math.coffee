@@ -10,8 +10,10 @@ recursive = (fn) ->
         else
             fn a, args...
 
-# Similar to the `recursive` helper, but simply converts arrays
-# into positional arguments if necessary.
+# Similar to the `recursive` helper, but for functions that
+# take no parameters. For functions that work on positional
+# arguments, `normalize` simply converts arrays to
+# positional arguments when needed.
 normalize = (fn) ->
     ->
         if arguments[0].length?
@@ -20,7 +22,9 @@ normalize = (fn) ->
             fn arguments...
 
 # Also similar to the `recursive` helper, but for functions that
-# do calculations or operations on lists.
+# (by their nature) are calculations or operations on lists 
+# instead of single numbers, like finding the maximum in a list.
+# `deep` allows these functions to batch-process lists of lists.
 deep = (fn) ->
     (list, args...) ->
         if list[0][0]?
@@ -50,7 +54,13 @@ module.exports = math =
         # other constants
         GOLDEN_RATIO: 1.618033988749895
 
-    random: Math.random
+    # For more fancy functions related to pseudo-random number generation, 
+    # check the `random` submodule.
+    random: (n) -> 
+        if n
+            [1..n].map -> Math.random()
+        else
+            Math.random()
 
     # Generate an integer Array containing an arithmetic progression.
     #
@@ -270,11 +280,13 @@ module.exports = math =
             degrees / (180 / math.constants.PI)
 
     # Make the sum of a list.
-    sum: ->
+    # Accepts either positional arguments or an array of values.
+    sum: normalize ->
         Array.prototype.slice.call(arguments).reduce ((a, b) -> a+b), 0
 
     # The multiplication of every number in a list.
-    multiply: ->
+    # Accepts either positional arguments or an array of values.
+    multiply: normalize ->
         Array.prototype.slice.call(arguments).reduce ((a, b) -> a*b), 1
 
     # Add a certain number to another number or to each number in a list.
@@ -367,7 +379,6 @@ module.exports = math =
     #
     #     math.greatest_common_divisor(3, 6, 9) == 3;
     #     math.greatest_common_divisor(1989, 102, 867) == 51;
-    #
     #
     # As most other functions in this library, you can pass an array as well, but
     # be sure you know what you're doing: 
