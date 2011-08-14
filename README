@@ -2,6 +2,11 @@ Math is a better math library for JavaScript. Everything that's available under 
 good ol' Math object is available under the `math` prefix as well, but so much more 
 too.
 
+Math is focused on arithmetic and other simple operations on numbers, like finding the 
+greatest common divisor, rounding numbers, generating random numbers and converting
+between polar and cartesian coordinates. Stuff that's useful for everyday calculations.
+Don't expect something like [NumPy or SciPy](http://www.scipy.org/) — you'd be disappointed.
+
 Some care has been taken to make sure that operations are never in-place: we don't
 change existing data structures but always return calculations as a new number, in 
 a new array or other structure.
