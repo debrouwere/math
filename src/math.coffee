@@ -18,7 +18,9 @@ alias = (name, base) ->
 
 module.exports = math = 
     constants:
+        # constants that the Math object includes out of the box
         E:       Math.E
+        EULER:   Math.E
         LN2:     Math.LN2
         LN10:    Math.LN10
         LOG2E:   Math.LOG2E
@@ -26,6 +28,9 @@ module.exports = math =
         PI:      Math.PI
         SQRT1_2: Math.SQRT1_2
         SQRT2:   Math.SQRT2
+
+        # other constants
+        GOLDEN_RATIO: 1.618033988749895
 
     random: Math.random
 
@@ -103,6 +108,13 @@ module.exports = math =
         neg: recursive (a) -> a < 0
         negative: alias 'neg', 'is'
 
+    are:
+        equal: ->
+            for number in arguments
+                if arguments[0] != number
+                    return false
+            return true
+
     # Find the lowest value in a sequence.
     min: Math.min
     minimum: alias 'min'
@@ -110,6 +122,26 @@ module.exports = math =
     # Find the highest value in a sequence.
     max: Math.max
     maximum: alias 'max'
+
+    # Find the index of the highest and lowest values in a sequence.
+    index:
+        min: ->
+            winner = 0
+            for number, i in arguments
+                if number < arguments[winner]
+                    winner = i
+            winner
+
+        minimum: alias 'min', 'index'
+
+        max: ->
+            winner = 0
+            for number, i in arguments
+                if number > arguments[winner]
+                    winner = i
+            winner
+
+        maximum: alias 'max', 'index'
 
     # Round down a real value to an integer.
     floor: recursive Math.floor
@@ -197,6 +229,10 @@ module.exports = math =
     sum: ->
         Array.prototype.slice.call(arguments).reduce ((a, b) -> a+b), 0
 
+    # The multiplication of every number in a list.
+    multiply: ->
+        Array.prototype.slice.call(arguments).reduce ((a, b) -> a*b), 1
+
     # Add a certain number to another number or to each number in a list.
     add: recursive (a, b) ->
         a + b
@@ -275,3 +311,60 @@ module.exports = math =
             f *= i
 
         f
+
+    # The Euclidean algorithm for finding the greatest common divisor.
+    # It's usually pretty darn fast.
+    # 
+    # The greatest common divisor of a bunch of numbers is the largest positive 
+    # integer that can divide those numbers without a remainder.
+    #
+    # Most greatest common divisor algorithms only find the GCD for two numbers, 
+    # but this one accepts a variable amount of arguments: 
+    #
+    #     math.greatest_common_divisor(3, 6, 9) == 3;
+    #     math.greatest_common_divisor(1989, 102, 867) == 51;
+    #
+    #
+    # As most other functions in this library, you can pass an array as well, but
+    # be sure you know what you're doing: 
+    #
+    #     # this calculates the GCDs for x together with 3 and 6, 
+    #     # so the GCD for 6, 3 and 6, then 11, 3 and 6, then 
+    #     # 15, 3 and 6.
+    #     math.gcd [6, 11, 15], 3, 6 == [3, 1, 3];
+    #
+    gcd: recursive ->
+        arguments = Array.prototype.slice.call arguments
+        
+        if 0 in arguments
+            return Infinity
+        else if math.are.equal arguments...
+            arguments[0]
+        else
+            min = math.min arguments...
+            numbers = arguments.map (number) ->
+                if number is min
+                    number
+                else
+                    number-min
+
+            math.gcd numbers...
+    
+    greatest_common_divisor: alias 'gcd'
+
+    # Just like our *greatest common denominator*, the *least
+    # common multiple* function can find the LCM for any amount
+    # of numbers.
+    # 
+    # Behind the scenes, it's implemented recursively: whenever
+    # we ask for an LCM of three or more numbers, we translate
+    # that as the LCM of the first number and the LCM of the
+    # other numbers. Clever? Clever.
+    lcm: recursive ->
+        if arguments.length > 2
+            [a, arguments...] = arguments
+            math.lcm a, math.lcm(arguments...)
+        else
+            math.abs(math.multiply arguments...) / math.gcd(arguments...)
+    
+    least_common_multiple: alias 'lcm'
