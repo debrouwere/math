@@ -32,7 +32,7 @@ make code more understandable, whereas in other cases it only causes clutter. De
 which is more apt for your use-case.
 
 You can use math in the browser and in node.js. The library is subdivided into the 
-submodules `math` and `random`. If you just need one or the other, or just want
+submodules `math`, `random` and `coordinates`. If you just need one or the other, or just want
 easier shortcuts, do
 
     // create a basic shortcut
@@ -47,9 +47,9 @@ easier shortcuts, do
 Or, in CoffeeScript:
 
     # in the browser
-    {math, random} = math
+    {math, random, coordinates} = math
     # in node.js
-    {math, random} = require 'math'
+    {math, random, coordinates} = require 'math'
 
 Also take a look at these libraries: 
 
