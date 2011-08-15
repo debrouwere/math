@@ -1,55 +1,4 @@
-# courtesy of underscore.js
-extend = (destination, sources...) ->
-    for source in sources
-        for prop of source
-            if source[prop]? then destination[prop] = source[prop]
-
-    destination
-
-copy = (obj) ->
-    extend {}, obj
-
-# create a function that just routes to another function
-route = (obj, method) ->
-    ->
-        @[obj][method] arguments...
-
-# To support sets with custom objects rather than just numbers, 
-# we need hashes that can have any object as their key, which JavaScript
-# doesn't support out of the box. Hence our own hash implementation.
-class exports.Hash
-    constructor: ->
-        @keys = []
-        @values = []
-
-    index: (key) ->
-        @keys.indexOf key
-
-    items: ->
-        [@keys[i], @values[i]] for i in [0...@keys.length]
-
-    get: (key, default_value) ->
-        i = @index key
-        if i > -1
-            @values[i]
-        else
-            default_value
-
-    set: (key, value) ->
-        i = @index key
-        if i == -1
-            @keys.push key
-            @values.push value
-        else
-            @values[i] = value
-
-    remove: (key) ->
-        i = @index key
-        if i
-            @keys.splice i, 1
-            @values.splice i, 1
-        else
-            throw new Error()
+{extend, copy, route, Hash} = require './helpers'
 
 class Tester
     constructor: (set) ->
@@ -57,7 +6,7 @@ class Tester
 
     # Sets are disjoint if and only if their intersection is the empty set.
     disjoint: (sets...) ->
-        @set.intersection(sets...)
+        @set.intersection(sets...).length == 0
 
     subset: ->
 
@@ -150,7 +99,7 @@ class exports.Set
     # one of the sets but not in their intersection
     symmetric_difference: (sets...) ->       
         diff = Set::new sets..., @
-        tally = new exports.Hash()
+        tally = new Hash()
         
         for set in sets.concat [@]
             for element in set.elements

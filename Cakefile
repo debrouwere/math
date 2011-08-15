@@ -24,7 +24,7 @@ task 'build', 'build the JavaScript source files', ->
 # heavily inspired by Jeremy Ashkenas' CoffeeScript build script
 task 'build:browser', 'merge and uglify the code for usage in a browser environment', ->
     # order is important: we can't require anything that isn't loaded yet
-    modules = ['math', 'random', 'index']
+    modules = ['helpers', 'math', 'random', 'sets', 'coordinates', 'index']
     
     code = ''
     
