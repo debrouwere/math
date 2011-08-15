@@ -2,5 +2,5 @@ Math is maintained by Stijn Debrouwere.
 
 It includes open-source code inspired by or taken from:
 
-  * Jeremy Ashkenas: `math.range`
+  * Jeremy Ashkenas: `math.range` and `sets.extend`
   * Chris West: `math.power`
