@@ -1,4 +1,10 @@
-{recursive, normalize, deep, alias} = require './helpers'
+{recursive, normalize, deep} = require './helpers'
+
+alias = (name, base) ->
+    if base?
+        -> math[base][name] arguments...
+    else
+        -> math[name] arguments...
 
 module.exports = math = 
     constants:
@@ -99,11 +105,24 @@ module.exports = math =
         negative: alias 'neg', 'is'
 
     are:
-        equal: ->
-            for number in arguments
-                if arguments[0] != number
-                    return false
-            return true
+        equal: (numbers...) ->
+            if numbers[0].constructor.name is 'Number'
+                for number in numbers
+                    if numbers[0] != number
+                        return no
+                return yes
+            else if numbers[0].constructor.name is 'Array'
+                # lists that don't have the same length can't be equal
+                lengths = numbers.map (list) -> list.length
+                return no unless math.are.equal lengths...
+            
+                for list in numbers
+                    identical = numbers[0].every (item, i) -> item == list[i]
+                    unless identical
+                        return no
+                return yes
+            else
+                throw new Error()
 
     # Find the lowest value in a sequence.
     # Accepts either positional arguments or an array of values.

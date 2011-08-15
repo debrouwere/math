@@ -1,20 +1,53 @@
-{extend, copy, route, Hash} = require './helpers'
+{recursive, extend, copy, route, Hash} = require './helpers'
+math = require './math'
 
 class Tester
     constructor: (set) ->
         @set = set
 
     # Sets are disjoint if and only if their intersection is the empty set.
-    disjoint: (sets...) ->
-        @set.intersection(sets...).length == 0
+    disjoint: (set) ->
+        @set.intersection(set).length == 0
 
-    subset: ->
+    subset_of: (set) ->
+        # the supposed subset (`@set`) should be equally sized or smaller than
+        # the set we compare with
+        return no unless @set.length <= set.length
 
-    true_subset: ->
+        _subset = math.sort(@set.elements)
+        _set    = math.sort(set.elements)
 
-    superset: ->
+        index = _set.indexOf _subset[0]
+        return no if index is -1
 
-    true_superset: ->
+        # we compare the part of the superset that is supposed to be the subset
+        # with the supposed subset itself
+        _set = _set.slice(index, index+_subset.length)        
+        math.are.equal _subset, _set
+
+    proper_subset_of: (set) ->
+        @subset_of(set) and @set.length < set.length
+
+    superset_of: (set) ->
+        # the supposed superset (`@set`) should be at least as big as
+        # the set we compare with
+        return no unless @set.length >= set.length
+
+        _superset = math.sort(@set.elements)
+        _set      = math.sort(set.elements)
+
+        index = _superset.indexOf _set[0]
+        return no if index is -1
+
+        _superset = _superset.slice(index, index+_set.length)
+
+        console.log _superset
+        console.log _set
+        
+        math.are.equal _superset, _set
+
+    proper_superset_of: (set) ->
+        @superset_of(set) and @set.length > set.length
 
 # When working with a set, always add elements with `add` and 
 # remove elements with `discard` or `remove`.

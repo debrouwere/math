@@ -5,6 +5,7 @@ sets = require '../sets'
 a = new sets.Set [1..5]
 b = new sets.Set [4..8]
 c = new sets.Set [7..10]
+d = new sets.Set [2..4]
 
 module.exports = 
     "compute the union of multiple sets": ->
@@ -21,11 +22,11 @@ module.exports =
 
     "compute the symmetric difference of multiple sets": ->
         # the symmetric difference is every number that's in an odd amount of sets
-        d = new sets.Set [1, 2, 3, 9, 10]
-        e = new sets.Set [3, 4, 5, 6, 10]
-        f = new sets.Set [6, 7, 8, 9, 10]
+        f = new sets.Set [1, 2, 3, 9, 10]
+        g = new sets.Set [3, 4, 5, 6, 10]
+        h = new sets.Set [6, 7, 8, 9, 10]
     
-        math.sort(d.symmetric_difference(e, f).elements).should.eql [1, 2, 4, 5, 7, 8, 10]
+        math.sort(f.symmetric_difference(g, h).elements).should.eql [1, 2, 4, 5, 7, 8, 10]
 
     "sets have a subset of array-like methods": ->
         a_mod = a.filter (item) -> item < 4
@@ -33,3 +34,21 @@ module.exports =
 
         b_mod = b.map (item) -> item * 2
         b_mod.elements.should.eql [8, 10, 12, 14, 16]
+
+    "determine whether one set is a subset of another": ->
+        a.is.subset_of(d).should.equal false
+        d.is.subset_of(a).should.equal true
+        a.is.subset_of(a).should.equal true
+
+    "determine whether one set is a proper subset of another": ->
+        a.is.proper_subset_of(a).should.equal false
+        d.is.proper_subset_of(a).should.equal true
+
+    "determine whether one set is a superset of another": ->
+        d.is.superset_of(a).should.equal false
+        a.is.superset_of(d).should.equal true
+        a.is.superset_of(a).should.equal true
+
+    "determine whether one set is a proper superset of another": ->
+        a.is.proper_superset_of(a).should.equal false
+        a.is.proper_superset_of(d).should.equal true

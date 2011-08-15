@@ -6,7 +6,7 @@ module.exports =
     # value in that array, saving people a mapping transformation.
     recursive: (fn) ->
         recursive_fn = (a, args...) ->
-            if a.length?
+            if a.constructor.name is 'Array'
                 recursive_fn x, args... for x in a
             else
                 fn a, args...
@@ -33,12 +33,6 @@ module.exports =
             else
                 fn list, args...
 
-    alias: (name, base) ->
-        if base?
-            -> math[base][name] arguments...
-        else
-            -> math[name] arguments...
-
     # courtesy of underscore.js
     extend: (destination, sources...) ->
         for source in sources
@@ -48,7 +42,7 @@ module.exports =
         destination
 
     copy: (obj) ->
-        extend {}, obj
+        module.exports.extend {}, obj
 
     # create a function that just routes to another function
     route: (obj, method) ->
