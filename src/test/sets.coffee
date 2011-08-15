@@ -1,4 +1,5 @@
 should = require 'should'
+math = require '../math'
 sets = require '../sets'
 
 a = new sets.Set [1..5]
@@ -24,4 +25,4 @@ module.exports =
         b = new sets.Set [3, 4, 5, 6, 10]
         c = new sets.Set [6, 7, 8, 9, 10]
     
-        a.symmetric_difference(b, c).elements.should.eql [1, 2, 4, 5, 7, 8, 10]
+        math.sort(a.symmetric_difference(b, c).elements).should.eql [1, 2, 4, 5, 7, 8, 10]

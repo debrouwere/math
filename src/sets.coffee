@@ -6,6 +6,43 @@ extend = (destination, sources...) ->
 
     destination
 
+# The most efficient way to implement sets is with hashes, but JavaScript
+# doesn't support arbitrary objects as keys, so we need our own hash
+# implementation.
+class exports.Hash
+    constructor: ->
+        @keys = []
+        @values = []
+
+    index: (key) ->
+        @keys.indexOf key
+
+    items: ->
+        [@keys[i], @values[i]] for i in [0...@keys.length]
+
+    get: (key, default_value) ->
+        i = @index key
+        if i > -1
+            @values[i]
+        else
+            default_value
+
+    set: (key, value) ->
+        i = @index key
+        if i == -1
+            @keys.push key
+            @values.push value
+        else
+            @values[i] = value
+
+    remove: (key) ->
+        i = @index key
+        if i
+            @keys.splice i, 1
+            @values.splice i, 1
+        else
+            throw new Error()
+
 class Tester
     constructor: (set) ->
         @set = set
@@ -21,9 +58,6 @@ class Tester
 
     true_superset: ->
 
-# Although it is often more efficient to implement sets in terms of
-# hash tables, storing a set as an array is more convenient and easier
-# considering JavaScript's lack of support for 
 class exports.Set
     constructor: (list, comparators = {}) ->
         if typeof comparators is 'function'
@@ -100,17 +134,15 @@ class exports.Set
     # one of the sets but not in their intersection
     symmetric_difference: (sets...) ->       
         diff = Set::new sets..., @
-        # note that, because of limitations in JavaScript hashes, this won't
-        # work for complex objects (unless we'd ask for a hash function in 
-        # addition to comparators)
-        tally = {}
+        tally = new exports.Hash()
         
         for set in sets.concat [@]
             for element in set.elements
-                tally[element] ?= 0
-                tally[element] += 1
+                tally.set element, tally.get(element, 0) + 1
 
-        for element, count of tally
+        console.log tally
+
+        for [element, count] in tally.items()
             if count % 2 == 1
                 diff.add element
         
