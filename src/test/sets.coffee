@@ -52,3 +52,37 @@ module.exports =
     "determine whether one set is a proper superset of another": ->
         a.is.proper_superset_of(a).should.equal false
         a.is.proper_superset_of(d).should.equal true
+
+    "works with complex objects": ->
+        class N
+            constructor: (@n) ->
+
+        # this returns 10 N objects, five of which are the same
+        list = [1..10].map (n) -> new N(n % 5)
+
+        l = new sets.Set list
+        m = new sets.Set list, N: (a, b) -> a.n == b.n
+        l.length.should.equal 10
+        m.length.should.equal 5
+
+    "works with mixed types of complex objects": ->
+        class N
+            constructor: (@n) ->
+
+        class C
+            constructor: (@n, @i) ->
+
+        ns   = [1..10].map (n) -> new N(n % 5)
+        cs   = [1..8].map (n) -> new C(n % 4, 2)
+        ints = [1..3]
+
+        list = ns.concat cs, ints
+        # constructor.name, because duck typing can lead to accidents if 
+        # you don't know what you're doing, like in this case where both
+        # complex objects have an `n` attribute.
+        set = new sets.Set list, 
+            N: (a, b) -> a.n == b.n and a.constructor.name == b.constructor.name
+            C: (a, b) -> a.n == b.n and a.i == b.i
+
+        # 5 Ns, 4 Cs, 3 ints.
+        set.length.should.equal 12
