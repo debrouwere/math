@@ -6,6 +6,14 @@ extend = (destination, sources...) ->
 
     destination
 
+copy = (obj) ->
+    extend {}, obj
+
+# create a function that just routes to another function
+route = (obj, method) ->
+    ->
+        @[obj][method] arguments...
+
 # To support sets with custom objects rather than just numbers, 
 # we need hashes that can have any object as their key, which JavaScript
 # doesn't support out of the box. Hence our own hash implementation.
@@ -48,7 +56,8 @@ class Tester
         @set = set
 
     # Sets are disjoint if and only if their intersection is the empty set.
-    disjoint: ->
+    disjoint: (sets...) ->
+        @set.intersection(sets...)
 
     subset: ->
 
@@ -58,6 +67,10 @@ class Tester
 
     true_superset: ->
 
+# When working with a set, always add elements with `add` and 
+# remove elements with `discard` or `remove`.
+# Accessing the `elements` array is very useful for iterating
+# over a set, but 
 class exports.Set
     constructor: (list, comparators = {}) ->
         if typeof comparators is 'function'
@@ -70,6 +83,7 @@ class exports.Set
         @is = new Tester @
         
         list ?= []
+        @length = 0
         @elements = []
         @add element for element in list
 
@@ -87,11 +101,13 @@ class exports.Set
             if @comparator_for(element)(new_element, element) is true
                 return @
         @elements.push new_element
+        @length += 1
 
         @
 
     discard: (element) ->
         @elements = @elements.filter (el) => @comparator_for(element)(element, el) is false
+        @length -= 1
 
         @
 
@@ -140,13 +156,32 @@ class exports.Set
             for element in set.elements
                 tally.set element, tally.get(element, 0) + 1
 
-        console.log tally
-
         for [element, count] in tally.items()
             if count % 2 == 1
                 diff.add element
         
         diff
+
+    # A subset of Array-like methods that make sense on Sets too
+    forEach: route 'elements', 'forEach'
+    
+    every: route 'elements', 'every'
+    
+    some: route 'elements', 'some'
+
+    filter: (callback) ->
+        elements = @elements.filter callback
+        new @constructor elements, copy @comparators
+
+    # A mapped set is still a set, so if your mapped values
+    # overlap, your set will shrink.
+    #
+    #    var mapped_set = set.map(function(a){ return 1; });
+    #    mapped_set.length == 1;
+    # 
+    map: (callback) ->
+        elements = @elements.map callback
+        new @constructor elements, copy @comparators
 
 exports.Set::new = (bases...) ->
     comparators = bases.map (set) -> set.comparators
