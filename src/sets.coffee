@@ -70,7 +70,6 @@ class exports.Set
         @is = new Tester @
         
         list ?= []
-        @hash = new Hash()
         @elements = []
         @add element for element in list
 
