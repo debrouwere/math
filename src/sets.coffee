@@ -6,9 +6,9 @@ extend = (destination, sources...) ->
 
     destination
 
-# The most efficient way to implement sets is with hashes, but JavaScript
-# doesn't support arbitrary objects as keys, so we need our own hash
-# implementation.
+# To support sets with custom objects rather than just numbers, 
+# we need hashes that can have any object as their key, which JavaScript
+# doesn't support out of the box. Hence our own hash implementation.
 class exports.Hash
     constructor: ->
         @keys = []
@@ -70,6 +70,7 @@ class exports.Set
         @is = new Tester @
         
         list ?= []
+        @hash = new Hash()
         @elements = []
         @add element for element in list
 
