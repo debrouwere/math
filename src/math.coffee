@@ -274,6 +274,13 @@ module.exports = math =
     sum: normalize ->
         Array.prototype.slice.call(arguments).reduce ((a, b) -> a+b), 0
 
+    # Summation.
+    # Takes a list (an array), a function to perform on each element
+    # of that list, and after performing said function returns the 
+    # sum of the transformed list.
+    summation: deep (list, fn) ->
+        math.sum list.map fn
+
     # The multiplication of every number in a list.
     # Accepts either positional arguments or an array of values.
     multiply: normalize ->
