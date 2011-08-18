@@ -9,6 +9,6 @@ exports.sets = require './sets'
 
 exports.unpack = (submodules...) ->
     for name, value of exports
-        if not submodules or submodules.indexOf(name) > -1
+        if not submodules.length or (submodules.indexOf(name) > -1)
             window[name] = value
     undefined

@@ -44,9 +44,12 @@ class exports.polar.Point
         else
             @theta = theta
 
-        # Purely for informational purposes, we'll convert theta into degrees.
+        # Purely for informational purposes, we'll convert theta into degrees and turns.
         @degrees ?= convert.degrees @theta
-        @normalized_degrees = @degrees % 360
+        @turns = @theta / 2*Math.PI
+        @normalized =
+            degrees: @degrees % 360
+            turns: @turns % 1
 
     to: (system, options) ->
         unless system is exports.cartesian.Point

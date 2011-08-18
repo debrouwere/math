@@ -201,6 +201,9 @@ module.exports = math =
     
     exponential: alias 'exp'
 
+    e: recursive (x) ->
+        base * math.power 10, x
+
     # Different people mean different things by 'logarithm', but
     # mathematicians most often mean the natural logarithm, which
     # uses Euler's constant (available under `math.constants.E`)
