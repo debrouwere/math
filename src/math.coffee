@@ -201,7 +201,7 @@ module.exports = math =
     
     exponential: alias 'exp'
 
-    e: recursive (x) ->
+    e: recursive (base, x) ->
         base * math.power 10, x
 
     # Different people mean different things by 'logarithm', but
