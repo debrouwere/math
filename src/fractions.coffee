@@ -25,6 +25,13 @@ class exports.Fraction
     valueOf: ->
         @numerator / @denominator
 
+# NOTE: there are probably algorithms out there that either work
+# on a broader range of real numbers, or that are more elegant.
+#
+# Continued fractions could likely provide some help here.
+#
+# This is just a first stab that works for a reasonable amount
+# of real numbers.
 exports.Fraction.from_real = (number) ->
     # Reduces any number to a number lower than or equal to 0.5
     # (which we need to find the denominator).

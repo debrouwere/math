@@ -383,8 +383,17 @@ module.exports = math =
     #     # this calculates the GCDs for x together with 3 and 6, 
     #     # so the GCD for 6, 3 and 6, then 11, 3 and 6, then 
     #     # 15, 3 and 6.
-    #     math.gcd [6, 11, 15], 3, 6 == [3, 1, 3];
+    #     math.gcd([6, 11, 15], 3, 6) == [3, 1, 3];
     #
+    # This function works for simple real numbers too: 
+    #
+    #     math.gcd(1.5, 1) == 0.5;
+    #
+    # ... but was not built to handle any real number you throw at it.
+    # 
+    #     math.lcm(0.6, 1)
+    #     # RangeError: Maximum call stack size exceeded
+    
     gcd: recursive ->
         arguments = Array.prototype.slice.call arguments
         
