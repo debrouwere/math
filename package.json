@@ -1,5 +1,5 @@
 {
-    "name": "math",
+    "name": "mathlib",
     "author": "Stijn Debrouwere",
     "description": "A better math library for JavaScript.",
     "version": "0.2.0",
